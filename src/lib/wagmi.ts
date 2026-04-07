@@ -1,11 +1,33 @@
-import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { sepolia, baseSepolia, mainnet } from 'wagmi/chains';
+import { createConfig, http } from 'wagmi';
+import { mainnet, sepolia } from 'wagmi/chains';
 
-export const config = getDefaultConfig({
-  appName: 'Web3 DApp',
-  projectId: 'YOUR_WALLET_CONNECT_PROJECT_ID', // Get from https://cloud.walletconnect.com
-  chains: [sepolia, baseSepolia, mainnet],
-  ssr: false,
+/**
+ * Wagmi v2 config using createConfig with http transports.
+ *
+ * Usage with WagmiProvider (in your App or main entry):
+ *
+ *   import { WagmiProvider } from 'wagmi';
+ *   import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+ *   import { config } from './lib/wagmi';
+ *
+ *   const queryClient = new QueryClient();
+ *
+ *   function App() {
+ *     return (
+ *       <WagmiProvider config={config}>
+ *         <QueryClientProvider client={queryClient}>
+ *           { /* your app components */ }
+ *         </QueryClientProvider>
+ *       </WagmiProvider>
+ *     );
+ *   }
+ */
+export const config = createConfig({
+  chains: [mainnet, sepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
 });
 
 // Contract addresses will be populated after deployment
